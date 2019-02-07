@@ -34,7 +34,7 @@ public class ConnectionUtils {
 
             //Opens the url connection and sets the request
             urlConnection = (HttpURLConnection) requestURL.openConnection();
-            urlConnection.setRequestProperty("APIKey", "bzhAWZ5HDcTV95WkZ4GJ-Tse-Tt0GzLeZ1tBcvt_");
+            urlConnection.setRequestProperty("Authorization", "bzhAWZ5HDcTV95WkZ4GJ-Tse-Tt0GzLeZ1tBcvt_");
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
 
