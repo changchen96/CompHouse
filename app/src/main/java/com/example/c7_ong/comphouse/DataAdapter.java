@@ -6,15 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewAdapter> {
+public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder> {
     @NonNull
     @Override
-    public DataAdapter.DataViewAdapter onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public DataAdapter.DataViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         return null;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DataAdapter.DataViewAdapter dataViewAdapter, int i) {
+    public void onBindViewHolder(@NonNull DataAdapter.DataViewHolder dataViewAdapter, int i) {
 
     }
 
@@ -23,15 +23,16 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewAdapte
         return 0;
     }
 
-    class DataViewAdapter extends RecyclerView.ViewHolder
+    class DataViewHolder extends RecyclerView.ViewHolder
     {
         public final TextView dataView;
-        final DataAdapter dataAdapter;
-        public DataViewAdapter(View itemView, DataViewAdapter adapter)
+        final DataAdapter mAdapter;
+        public DataViewHolder(View itemView, DataAdapter adapter)
         {
             super(itemView);
             {
-                //dataView = itemView.findViewById(R.id.word);
+                dataView = itemView.findViewById(R.id.word);
+                this.mAdapter = adapter;
             }
         }
     }

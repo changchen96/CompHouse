@@ -10,10 +10,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.LinkedList;
+
 public class MainActivity extends AppCompatActivity {
 
     private EditText query;
     private TextView companyName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,9 +26,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void searchQuery(View view) {
+        Intent intent = new Intent (this, RecyclerView.class);
+        startActivityForResult(intent, 0);
+    }
+
+    public void getCompanies()
+    {
         String queryString = query.getText().toString();
         new FetchInfo(companyName).execute(queryString);
-        Intent intent = new Intent (this, drawGraph.class);
-        startActivityForResult(intent, 0);
     }
 }
