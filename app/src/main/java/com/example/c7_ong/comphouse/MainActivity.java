@@ -29,10 +29,4 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent (this, RecyclerView.class);
         startActivityForResult(intent, 0);
     }
-
-    public void getCompanies()
-    {
-        String queryString = query.getText().toString();
-        new FetchInfo(companyName).execute(queryString);
-    }
 }
