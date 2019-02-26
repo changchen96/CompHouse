@@ -80,7 +80,7 @@ public class ConnectionUtils {
                 }
             }
         }
-        Log.d(LOG_TAG, companyJSONString);
+        //Log.d(LOG_TAG, companyJSONString);
         return companyJSONString;
     }
 }

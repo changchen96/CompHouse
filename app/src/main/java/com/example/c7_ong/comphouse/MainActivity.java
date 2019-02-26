@@ -26,7 +26,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void searchQuery(View view) {
-        Intent intent = new Intent (this, RecyclerView.class);
-        startActivityForResult(intent, 0);
+        String queryString = query.getText().toString();
+        new FetchInfo(companyName).execute(queryString);
+//        Intent intent = new Intent (this, RecyclerView.class);
+//        startActivityForResult(intent, 0);
     }
 }
