@@ -1,62 +1,73 @@
 package com.example.c7_ong.comphouse;
 
+import android.app.Application;
+import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.TextView;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.net.URL;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
-public class FetchInfo extends AsyncTask <String, Void, String>{
-    RecyclerView newView = new RecyclerView();
-    //WeakReference is used to prevent memory leaks
-    private WeakReference<TextView> companyName;
-    public FetchInfo(TextView companyName)
+public class FetchInfo{
+    private static final String COMPHOUSE_BASE_URL = "https://api.companieshouse.gov.uk/search?";
+    private static final String QUERY_PARAMETER = "q";
+    private static final String ITEMS_PER_PAGE = "items_per_page";
+    private static final String START_INDEX = "start_index";
+    private static final String LOG_TAG = FetchInfo.class.getSimpleName();
+    private Context context;
+
+    public void fetchCompany(String query)
     {
-        this.companyName = new WeakReference<>(companyName);
-    }
-
-    @Override
-    protected String doInBackground(String... strings) {
-        return ConnectionUtils.getCompanyInfo(strings[0]);
-    }
-
-    @Override
-    protected void onPostExecute(String s) {
-        super.onPostExecute(s);
-        try
-        {
-            JSONObject jsonObject = new JSONObject(s);
-            JSONArray compNameArray = jsonObject.getJSONArray("items");
-            int i = 0;
-            String compName = null;
-            while (i < 5)
-            {
-                JSONObject company = compNameArray.getJSONObject(i);
-                try
-                {
-                    compName = company.getString("title");
-                }
-                catch(Exception e)
-                {
-                    e.printStackTrace();
-                }
-                i++;
+        RequestQueue queue = Volley.newRequestQueue(context);
+        String mQuery = query;
+        String uri = "https://api.companieshouse.gov.uk/search?q="+mQuery+"&items_per_page=5&start_index=1";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, uri, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("Response", response.toString());
             }
-            if (compName != null)
-            {
-                newView.getCompName(compName);
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("Volley", error.toString());
             }
-        }
-        catch(JSONException e)
+        })
         {
-
-        }
-
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError
+            {
+                Map<String, String> authParam = new HashMap<String, String>();
+                authParam.put("Authorization","bzhAWZ5HDcTV95WkZ4GJ-Tse-Tt0GzLeZ1tBcvt_");
+                return authParam;
+            }
+        };
+        //RequestQueue requestQueue = Volley.newRequestQueue(context);
+        queue.add(jsonObjectRequest);
     }
+
+    public FetchInfo(Context context)
+    {
+        this.context = context;
+    }
+
 
 }
 

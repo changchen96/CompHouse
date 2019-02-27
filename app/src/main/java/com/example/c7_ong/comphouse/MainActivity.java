@@ -1,5 +1,6 @@
 package com.example.c7_ong.comphouse;
 
+import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
 import android.support.v4.content.res.ResourcesCompat;
@@ -16,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText query;
     private TextView companyName;
+    private Context mainContext;
+    private FetchInfo newFetch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,11 +26,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         query = (EditText) findViewById(R.id.textBox);
         companyName = (TextView) findViewById(R.id.companyName);
+        newFetch = new FetchInfo(this);
     }
 
     public void searchQuery(View view) {
         String queryString = query.getText().toString();
-        new FetchInfo(companyName).execute(queryString);
+        newFetch.fetchCompany(queryString);
 //        Intent intent = new Intent (this, RecyclerView.class);
 //        startActivityForResult(intent, 0);
     }
