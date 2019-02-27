@@ -9,7 +9,7 @@ import android.widget.TextView;
 import java.util.LinkedList;
 
 public class RecyclerView extends AppCompatActivity{
-    private final LinkedList<String> companyList = new LinkedList<>();
+    private LinkedList<String> companyList = new LinkedList<>();
     private String compName;
     private String queryString = null;
     private static final String TAG = "recyclerView";
@@ -19,10 +19,5 @@ public class RecyclerView extends AppCompatActivity{
         setContentView(R.layout.activity_recycler_view);
     }
 
-    public String getCompName(String compName)
-    {
-        Log.d(TAG, compName);
-        return compName;
-    }
 
 }

@@ -32,18 +32,36 @@ public class FetchInfo{
     private static final String ITEMS_PER_PAGE = "items_per_page";
     private static final String START_INDEX = "start_index";
     private static final String LOG_TAG = FetchInfo.class.getSimpleName();
+    private final LinkedList<String> retCompanyList = new LinkedList<>();
+    RecyclerView newView = new RecyclerView();
     private Context context;
 
     public void fetchCompany(String query)
     {
-        RequestQueue queue = Volley.newRequestQueue(context);
-        String mQuery = query;
-        String uri = "https://api.companieshouse.gov.uk/search?q="+mQuery+"&items_per_page=5&start_index=1";
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, uri, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.d("Response", response.toString());
+    RequestQueue queue = Volley.newRequestQueue(context);
+    String mQuery = query;
+    String uri = "https://api.companieshouse.gov.uk/search?q="+mQuery+"&items_per_page=5&start_index=1";
+    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, uri, null, new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject response) {
+            //Log.d("Response", response.toString());
+                //Log.d("Response", response.toString());
+        try {
+            JSONArray array = response.getJSONArray("items");
+            for (int i = 0; i < array.length(); i++)
+            {
+                JSONObject title = array.getJSONObject(i);
+                String retrievedTitle = title.getString("title");
+                retCompanyList.addLast(retrievedTitle);
+                //Log.d("Response", title.getString("title"));
             }
+            newView.setCompName(retCompanyList);
+            }
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+        }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
