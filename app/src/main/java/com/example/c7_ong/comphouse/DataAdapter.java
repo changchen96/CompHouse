@@ -14,7 +14,7 @@ import java.util.List;
 import android.content.Context;
 import android.widget.Toast;
 
-public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CompNameHolder> implements View.OnClickListener{
+public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CompNameHolder> {
     private ArrayList<Company> mCompList;
     private LayoutInflater inflater;
     public DataAdapter (Context context, ArrayList<Company> compList)
@@ -26,6 +26,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CompNameHolder
     @Override
     public DataAdapter.CompNameHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View itemView = inflater.inflate(R.layout.rec_view_content, viewGroup, false);
+        //itemView.setOnClickListener(compClick);
         return new CompNameHolder(itemView);
     }
 
@@ -42,18 +43,19 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CompNameHolder
         return mCompList.size();
     }
 
-    @Override
-    public void onClick(View view) {
-        
-    }
 
-    class CompNameHolder extends RecyclerView.ViewHolder
+    class CompNameHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         public final TextView compName;
         public CompNameHolder(View itemView)
         {
             super(itemView);
             compName = itemView.findViewById(R.id.word);
+        }
+
+        @Override
+        public void onClick(View view) {
+
         }
     }
 
