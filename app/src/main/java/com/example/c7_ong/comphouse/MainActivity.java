@@ -13,22 +13,21 @@ public class MainActivity extends AppCompatActivity {
     private EditText query;
     private TextView companyName;
     private Context mainContext;
-    private FetchInfo newFetch;
-    private CompView newRecycler;
+    private CompView newComp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         query = (EditText) findViewById(R.id.textBox);
         companyName = (TextView) findViewById(R.id.companyName);
-        newFetch = new FetchInfo(this);
-        newRecycler = new CompView(this);
+        newComp = new CompView();
     }
 
     public void searchQuery(View view) {
         String queryString = query.getText().toString();
-        newRecycler.setCompName(queryString);
+        newComp.setCompName(queryString);
         Intent intent = new Intent (this, CompView.class);
+        intent.putExtra("query", queryString);
         startActivityForResult(intent, 0);
     }
 }

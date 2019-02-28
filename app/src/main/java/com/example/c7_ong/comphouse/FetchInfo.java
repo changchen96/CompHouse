@@ -38,7 +38,6 @@ public class FetchInfo{
     private List<Company> newCompList;
     public void fetchCompany(String query)
     {
-
     RequestQueue queue = Volley.newRequestQueue(context);
     String mQuery = query;
     String uri = "https://api.companieshouse.gov.uk/search?q="+mQuery+"&items_per_page=5&start_index=1";
