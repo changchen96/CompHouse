@@ -30,7 +30,7 @@ import java.util.Map;
 
 public class CompView extends AppCompatActivity{
     private Context context;
-    private List<Company> newCompList;
+    private ArrayList<Company> newCompList;
     private String compName;
     private RecyclerView mView;
     private DataAdapter dataAdapter;

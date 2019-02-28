@@ -12,10 +12,12 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 import android.content.Context;
-public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CompNameHolder> {
-    private List<Company> mCompList;
+import android.widget.Toast;
+
+public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CompNameHolder> implements View.OnClickListener{
+    private ArrayList<Company> mCompList;
     private LayoutInflater inflater;
-    public DataAdapter (Context context, List<Company> compList)
+    public DataAdapter (Context context, ArrayList<Company> compList)
     {
         inflater = LayoutInflater.from(context);
         this.mCompList = compList;
@@ -40,6 +42,11 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CompNameHolder
         return mCompList.size();
     }
 
+    @Override
+    public void onClick(View view) {
+        
+    }
+
     class CompNameHolder extends RecyclerView.ViewHolder
     {
         public final TextView compName;
@@ -55,7 +62,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CompNameHolder
         return mCompList;
     }
 
-    public void setData(List<Company> compList)
+    public void setData(ArrayList<Company> compList)
     {
         this.mCompList = compList;
         notifyDataSetChanged();
