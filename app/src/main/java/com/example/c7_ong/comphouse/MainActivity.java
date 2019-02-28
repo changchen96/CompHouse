@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void searchQuery(View view) {
         String queryString = query.getText().toString();
-        newComp.setCompName(queryString);
         Intent intent = new Intent (this, CompView.class);
         intent.putExtra("query", queryString);
         startActivityForResult(intent, 0);

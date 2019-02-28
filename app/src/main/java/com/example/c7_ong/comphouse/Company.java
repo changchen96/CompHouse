@@ -1,10 +1,10 @@
 package com.example.c7_ong.comphouse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Company {
     public String companyTitle;
-    private List<Company> companyList;
     public Company()
     {
 
@@ -19,13 +19,4 @@ public class Company {
         this.companyTitle = company;
     }
 
-    public void setCompanyList(List<Company> compNames)
-    {
-        this.companyList = compNames;
-    }
-
-    public List getCompanyList()
-    {
-        return companyList;
-    }
 }
