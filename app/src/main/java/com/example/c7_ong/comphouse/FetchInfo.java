@@ -24,6 +24,7 @@ import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class FetchInfo{
@@ -32,30 +33,34 @@ public class FetchInfo{
     private static final String ITEMS_PER_PAGE = "items_per_page";
     private static final String START_INDEX = "start_index";
     private static final String LOG_TAG = FetchInfo.class.getSimpleName();
-    private final LinkedList<String> retCompanyList = new LinkedList<>();
-    RecyclerView newView = new RecyclerView();
+    //CompView newView = new CompView();
     private Context context;
-
+    private List<Company> newCompList;
     public void fetchCompany(String query)
     {
+
     RequestQueue queue = Volley.newRequestQueue(context);
     String mQuery = query;
     String uri = "https://api.companieshouse.gov.uk/search?q="+mQuery+"&items_per_page=5&start_index=1";
     JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, uri, null, new Response.Listener<JSONObject>() {
         @Override
         public void onResponse(JSONObject response) {
-            //Log.d("Response", response.toString());
-                //Log.d("Response", response.toString());
         try {
             JSONArray array = response.getJSONArray("items");
             for (int i = 0; i < array.length(); i++)
             {
                 JSONObject title = array.getJSONObject(i);
                 String retrievedTitle = title.getString("title");
-                retCompanyList.addLast(retrievedTitle);
+                Company company = new Company();
+                company.setCompanyTitle(retrievedTitle);
+                newCompList.add(company);
                 //Log.d("Response", title.getString("title"));
+                if (i == array.length())
+                {
+                    company.setCompanyList(newCompList);
+                }
             }
-            newView.setCompName(retCompanyList);
+
             }
             catch (JSONException e)
             {
@@ -77,7 +82,6 @@ public class FetchInfo{
                 return authParam;
             }
         };
-        //RequestQueue requestQueue = Volley.newRequestQueue(context);
         queue.add(jsonObjectRequest);
     }
 
