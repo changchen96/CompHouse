@@ -29,10 +29,8 @@ import java.util.List;
 import java.util.Map;
 
 public class CompView extends AppCompatActivity{
-    private Context context;
     private ArrayList<Company> newCompList;
     private String compName;
-    private String compNum;
     private RecyclerView mView;
     private DataAdapter dataAdapter;
     private static final String TAG = "recyclerView";

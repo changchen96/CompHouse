@@ -25,33 +25,11 @@ public class drawGraph extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_draw_graph);
         mImageView = (ImageView) findViewById(R.id.graphView);
+        drawGraph(mImageView);
     }
 
     public void drawGraph(View view) {
-        int height = 1000;
-        int width = 1000;
-        int OldX = 100;
-        int OldY = 70;
-        int counter;
-        int NewY = OldY;
-        int NewX = OldX;
-        newNodeClass = new NodeClass();
-        mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        mCanvas = new Canvas(mBitmap);
-        mPaint1 = new Paint();
-        mPaint1.setColor(Color.BLUE);
-        mPaint2 = new Paint();
-        mPaint2.setColor(Color.BLACK);
-        float circleRadius = newNodeClass.getRadius();
-        for (counter = 0; counter < 5; counter++)
-        {
-            mCanvas.drawCircle(OldX, NewY, circleRadius, mPaint1);
-            mCanvas.drawLine(OldX, OldY, NewX, NewY, mPaint2);
-            NewY = NewY + 200;
-            OldY = NewY;
-        }
-        mImageView.setImageBitmap(mBitmap);
-        view.invalidate();
+
 
     }
     @Override
