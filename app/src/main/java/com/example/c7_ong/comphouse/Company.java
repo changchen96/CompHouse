@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Company {
     public String companyTitle;
+    public String companyNumber;
     public Company()
     {
 
@@ -17,6 +18,16 @@ public class Company {
     public void setCompanyTitle(String company)
     {
         this.companyTitle = company;
+    }
+
+    public String getCompanyNumber()
+    {
+        return companyNumber;
+    }
+
+    public void setCompanyNumber(String companyNumber)
+    {
+        this.companyNumber = companyNumber;
     }
 
 }

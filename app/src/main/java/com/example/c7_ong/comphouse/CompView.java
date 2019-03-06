@@ -32,6 +32,7 @@ public class CompView extends AppCompatActivity{
     private Context context;
     private ArrayList<Company> newCompList;
     private String compName;
+    private String compNum;
     private RecyclerView mView;
     private DataAdapter dataAdapter;
     private static final String TAG = "recyclerView";
@@ -55,7 +56,7 @@ public class CompView extends AppCompatActivity{
         {
             RequestQueue queue = Volley.newRequestQueue(CompView.this);
             String mQuery = query;
-            String uri = "https://api.companieshouse.gov.uk/search?q="+mQuery+"&items_per_page=5&start_index=1";
+            String uri = "https://api.companieshouse.gov.uk/search?q="+mQuery+"";
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, uri, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -63,10 +64,12 @@ public class CompView extends AppCompatActivity{
                         JSONArray array = response.getJSONArray("items");
                         for (int i = 0; i < array.length(); i++)
                         {
-                            JSONObject title = array.getJSONObject(i);
+                            JSONObject data = array.getJSONObject(i);
                             Company company = new Company();
-                            String retrievedTitle = title.getString("title");
+                            String retrievedTitle = data.getString("title");
+                            String retrievedNumber = data.getString("company_number");
                             company.setCompanyTitle(retrievedTitle);
+                            company.setCompanyNumber(retrievedNumber);
                             newCompList.add(company);
                             Log.d("compList", newCompList.size()+"");
                         }

@@ -17,8 +17,10 @@ import android.widget.Toast;
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CompNameHolder> {
     private ArrayList<Company> mCompList;
     private LayoutInflater inflater;
+    private final Context compContext;
     public DataAdapter (Context context, ArrayList<Company> compList)
     {
+        this.compContext = context;
         inflater = LayoutInflater.from(context);
         this.mCompList = compList;
     }
@@ -34,7 +36,9 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CompNameHolder
     public void onBindViewHolder(@NonNull DataAdapter.CompNameHolder compNameHolder, int i) {
         Company company = mCompList.get(i);
         compNameHolder.compName.setText(company.getCompanyTitle());
-        Log.d("log", company.getCompanyTitle()+"*");
+        compNameHolder.compNum.setText(company.getCompanyNumber());
+        Log.d("log", company.getCompanyTitle());
+        Log.d("log", company.getCompanyNumber());
     }
 
     @Override
@@ -47,15 +51,21 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CompNameHolder
     class CompNameHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         public final TextView compName;
+        public final TextView compNum;
         public CompNameHolder(View itemView)
         {
             super(itemView);
             compName = itemView.findViewById(R.id.word);
+            compNum = itemView.findViewById(R.id.number);
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-
+            int mPosition = getLayoutPosition();
+            Company onClickComp = mCompList.get(mPosition);
+            String element = onClickComp.toString();
+            Toast.makeText(compContext, element + " Clicked!", Toast.LENGTH_SHORT).show();
         }
     }
 
