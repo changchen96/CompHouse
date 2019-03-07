@@ -19,4 +19,14 @@ public class NodeClass {
         this.y = PointY;
         return nodePoint;
     }
+
+    public int getPointX()
+    {
+        return x;
+    }
+
+    public int getPointY()
+    {
+        return y;
+    }
 }

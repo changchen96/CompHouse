@@ -1,6 +1,7 @@
 package com.example.c7_ong.comphouse;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
@@ -40,6 +41,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CompNameHolder
         this.compContext = context;
         inflater = LayoutInflater.from(context);
         this.mCompList = compList;
+        this.mOfficerList = new ArrayList<>();
     }
     @NonNull
     @Override
@@ -54,13 +56,13 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CompNameHolder
         Company company = mCompList.get(i);
         compNameHolder.compName.setText(company.getCompanyTitle());
         compNameHolder.compNum.setText(company.getCompanyNumber());
-        Log.d("log", company.getCompanyTitle());
-        Log.d("log", company.getCompanyNumber());
+        //Log.d("log", company.getCompanyTitle());
+        //Log.d("log", company.getCompanyNumber());
     }
 
     @Override
     public int getItemCount() {
-        Log.d("size", mCompList.size()+"");
+        //Log.d("size", mCompList.size()+"");
         return mCompList.size();
     }
 
@@ -81,10 +83,15 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CompNameHolder
         public void onClick(View view) {
             int mPosition = getLayoutPosition();
             Company onClickComp = mCompList.get(mPosition);
-            String element = onClickComp.getCompanyTitle().toString();
+            String compTitle = onClickComp.getCompanyTitle().toString();
             String compNo = onClickComp.getCompanyNumber().toString();
-            Toast.makeText(compContext, element + " Clicked!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(compContext, compNo + " Clicked!", Toast.LENGTH_SHORT).show();
+            fetchOfficers(compNo);
             Intent graph = new Intent(compContext, drawGraph.class);
+            Bundle officerBundle = new Bundle();
+            officerBundle.putSerializable("officer", mOfficerList);
+            graph.putExtras(officerBundle);
+            graph.putExtra("compName", compTitle);
             compContext.startActivity(graph);
         }
     }
@@ -104,7 +111,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CompNameHolder
     {
         RequestQueue officerQueue = Volley.newRequestQueue(compContext);
         String compNoQuery = companyNo;
-        String uri = "https://api.companieshouse.gov.uk/company/" + compNoQuery + "/officers";
+        String uri = "https://api.companieshouse.gov.uk/company/"+compNoQuery+"/officers";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, uri, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -116,13 +123,13 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CompNameHolder
                         JSONObject data = officerArray.getJSONObject(i);
                         Officer officer = new Officer();
                         String retrievedOfficerName = data.getString("name");
-                        String retrievedOfficerOccupation = data.getString("occupation");
                         officer.setOfficerName(retrievedOfficerName);
-                        officer.setOccupation(retrievedOfficerOccupation);
                         mOfficerList.add(officer);
-                        Log.d("officerList", mOfficerList.size()+"");
+                        //Log.d("officerList", mOfficerList.size()+"");
+                        Log.d("officerName", officer.getOfficerName().toString()+"");
                     }
                 }
+
                 catch (JSONException e)
                 {
                     e.printStackTrace();

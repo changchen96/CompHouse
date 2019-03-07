@@ -54,7 +54,7 @@ public class CompView extends AppCompatActivity{
         {
             RequestQueue queue = Volley.newRequestQueue(CompView.this);
             String mQuery = query;
-            String uri = "https://api.companieshouse.gov.uk/search?q="+mQuery+"";
+            String uri = "https://api.companieshouse.gov.uk/search/companies?q="+mQuery+"";
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, uri, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -69,7 +69,7 @@ public class CompView extends AppCompatActivity{
                             company.setCompanyTitle(retrievedTitle);
                             company.setCompanyNumber(retrievedNumber);
                             newCompList.add(company);
-                            Log.d("compList", newCompList.size()+"");
+                            //Log.d("compList", newCompList.size()+"");
                         }
                         dataAdapter = new DataAdapter(getApplicationContext(), newCompList);
                         mView.setAdapter(dataAdapter);
