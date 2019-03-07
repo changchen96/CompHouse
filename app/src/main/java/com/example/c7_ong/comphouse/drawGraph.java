@@ -20,27 +20,22 @@ public class drawGraph extends AppCompatActivity {
     private Paint mPaint1;
     private Paint mPaint2;
     private NodeClass newNodeClass;
-    private ImageView mImageView;
+    private NodeGraph mNodeGraph;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_draw_graph);
-        mImageView = (ImageView) findViewById(R.id.graphView);
-        drawGraph(mImageView);
-    }
-
-    public void drawGraph(View view) {
+        mNodeGraph = findViewById(R.id.graphView);
         Intent graphIntent = this.getIntent();
         Bundle graphBundle = graphIntent.getExtras();
         ArrayList<Officer> officerList = (ArrayList<Officer>)graphBundle.getSerializable("officer");
+        mNodeGraph.setTempOfficerList(officerList);
+        mNodeGraph.invalidate();
+        //newGraph.draw(mCanvas, officerList.size());
+    }
 
-    }
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-        drawGraph(mImageView);
-    }
+
+
 }
