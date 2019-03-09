@@ -33,7 +33,6 @@ import org.json.JSONObject;
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CompNameHolder> {
     private ArrayList<Company> mCompList;
-    private ArrayList<Officer> mOfficerList;
     private LayoutInflater inflater;
     private final Context compContext;
     public DataAdapter (Context context, ArrayList<Company> compList)
@@ -41,7 +40,6 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CompNameHolder
         this.compContext = context;
         inflater = LayoutInflater.from(context);
         this.mCompList = compList;
-        this.mOfficerList = new ArrayList<>();
     }
     @NonNull
     @Override
@@ -56,8 +54,6 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CompNameHolder
         Company company = mCompList.get(i);
         compNameHolder.compName.setText(company.getCompanyTitle());
         compNameHolder.compNum.setText(company.getCompanyNumber());
-        //Log.d("log", company.getCompanyTitle());
-        //Log.d("log", company.getCompanyNumber());
     }
 
     @Override
@@ -85,13 +81,9 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CompNameHolder
             Company onClickComp = mCompList.get(mPosition);
             String compTitle = onClickComp.getCompanyTitle().toString();
             String compNo = onClickComp.getCompanyNumber().toString();
-            Toast.makeText(compContext, compNo + " Clicked!", Toast.LENGTH_SHORT).show();
-            fetchOfficers(compNo);
+            Toast.makeText(compContext, compTitle + " Clicked!", Toast.LENGTH_SHORT).show();
             Intent graph = new Intent(compContext, drawGraph.class);
-            Bundle officerBundle = new Bundle();
-            officerBundle.putSerializable("officer", mOfficerList);
-            graph.putExtras(officerBundle);
-            graph.putExtra("compName", compTitle);
+            graph.putExtra("compNo", compNo);
             compContext.startActivity(graph);
         }
     }
@@ -105,53 +97,6 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CompNameHolder
     {
         this.mCompList = compList;
         notifyDataSetChanged();
-    }
-
-    private void fetchOfficers(String companyNo)
-    {
-        RequestQueue officerQueue = Volley.newRequestQueue(compContext);
-        String compNoQuery = companyNo;
-        String uri = "https://api.companieshouse.gov.uk/company/"+compNoQuery+"/officers";
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, uri, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try
-                {
-                    JSONArray officerArray = response.getJSONArray("items");
-                    for (int i = 0; i < officerArray.length(); i++)
-                    {
-                        JSONObject data = officerArray.getJSONObject(i);
-                        Officer officer = new Officer();
-                        String retrievedOfficerName = data.getString("name");
-                        officer.setOfficerName(retrievedOfficerName);
-                        mOfficerList.add(officer);
-                        //Log.d("officerList", mOfficerList.size()+"");
-                        Log.d("officerName", officer.getOfficerName().toString()+"");
-                    }
-                }
-
-                catch (JSONException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("Volley", error.toString());
-            }
-        })
-        {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError
-            {
-                Map<String, String> authParam = new HashMap<String, String>();
-                authParam.put("Authorization","bzhAWZ5HDcTV95WkZ4GJ-Tse-Tt0GzLeZ1tBcvt_");
-                return authParam;
-            }
-        };
-        officerQueue.add(jsonObjectRequest);
-
     }
 
 }
