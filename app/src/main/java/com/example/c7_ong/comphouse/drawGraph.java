@@ -31,11 +31,6 @@ import java.util.Map;
 public class drawGraph extends AppCompatActivity {
     private ArrayList<Officer> mOfficerList;
     private String compNumber;
-    private Bitmap mBitmap;
-    private Canvas mCanvas;
-    private Paint mPaint1;
-    private Paint mPaint2;
-    private NodeClass newNodeClass;
     private NodeGraph mNodeGraph;
 
 
@@ -43,12 +38,10 @@ public class drawGraph extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_draw_graph);
-        mNodeGraph = findViewById(R.id.graphView);
         compNumber = getIntent().getStringExtra("compNo");
         mOfficerList = new ArrayList<>();
+        mNodeGraph = findViewById(R.id.graphView);
         fetchOfficers(compNumber);
-        mNodeGraph.setTempOfficerList(mOfficerList);
-        mNodeGraph.invalidate();
     }
 
     private void fetchOfficers(String companyNo)
@@ -69,9 +62,11 @@ public class drawGraph extends AppCompatActivity {
                         String retrievedOfficerName = data.getString("name");
                         officer.setOfficerName(retrievedOfficerName);
                         mOfficerList.add(officer);
-                        //Log.d("officerList", mOfficerList.size()+"");
-                        Log.d("officerName", officer.getOfficerName().toString()+"");
+                        //Log.d("officerName", mOfficerList.toString());
                     }
+                    Log.d("officerListSize", mOfficerList.size()+"");
+                    mNodeGraph.setTempOfficerList(mOfficerList);
+                    mNodeGraph.invalidate();
                 }
 
                 catch (JSONException e)
@@ -95,8 +90,6 @@ public class drawGraph extends AppCompatActivity {
             }
         };
         officerQueue.add(jsonObjectRequest);
-
     }
-
 
 }

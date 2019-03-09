@@ -39,7 +39,7 @@ public class CompView extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_view);
         compName = getIntent().getStringExtra("query");
-        Log.d("log", compName);
+        //Log.d("log", compName);
         mView = findViewById(R.id.recyclerview);
         newCompList = new ArrayList<>();
         mView.setLayoutManager(new LinearLayoutManager(this));
