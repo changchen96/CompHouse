@@ -66,7 +66,6 @@ public class drawGraph extends AppCompatActivity {
                     }
                     Log.d("officerListSize", mOfficerList.size()+"");
                     mNodeGraph.setTempOfficerList(mOfficerList);
-                    mNodeGraph.invalidate();
                 }
 
                 catch (JSONException e)
