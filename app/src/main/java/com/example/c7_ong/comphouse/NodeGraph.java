@@ -71,9 +71,24 @@ public class NodeGraph extends View{
         int size = tempOfficerList.size();
         Log.d("arrSize", size+"");
         Double startAngle = Math.PI*(9/8d);
-        Double angle = startAngle + (pos * (Math.PI/(size)));
-        result[0] = (float) (radius * Math.cos(angle)) + (mWidth/2);
-        result[1] = (float) (radius * Math.sin(angle)) + (mHeight/2);
+        if (size > 30)
+        {
+            Double angle = startAngle + (pos * (Math.PI/(size-10)));
+            result[0] = (float) (radius * Math.cos(angle)) + (mWidth/2);
+            result[1] = (float) (radius * Math.sin(angle)) + (mHeight/2);
+        }
+        if (size > 20 && size < 30)
+        {
+            Double angle = startAngle + (pos * (Math.PI/(size-5)));
+            result[0] = (float) (radius * Math.cos(angle)) + (mWidth/2);
+            result[1] = (float) (radius * Math.sin(angle)) + (mHeight/2);
+        }
+        else
+        {
+            Double angle = startAngle + (pos * (Math.PI/(size)));
+            result[0] = (float) (radius * Math.cos(angle)) + (mWidth/2);
+            result[1] = (float) (radius * Math.sin(angle)) + (mHeight/2);
+        }
         return result;
     }
 
