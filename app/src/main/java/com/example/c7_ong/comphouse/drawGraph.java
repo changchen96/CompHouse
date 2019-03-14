@@ -39,6 +39,10 @@ public class drawGraph extends AppCompatActivity {
     private NodeGraph mNodeGraph;
     private float scaleFactor = 1.f;
     private ScaleGestureDetector scaleDetector;
+    private float onTouchX;
+    private float onTouchY;
+    private float finalX;
+    private float finalY;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,26 +103,63 @@ public class drawGraph extends AppCompatActivity {
     {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            boolean handled;
-            final float xCoordinate = motionEvent.getX();
-            final float yCoordinate = motionEvent.getY();
+            boolean handled = false;
+            int actionIndex = motionEvent.getActionIndex();
             switch(motionEvent.getActionMasked())
             {
                 case MotionEvent.ACTION_DOWN:
+                {
+                    final float xCoordinate = motionEvent.getX();
+                    final float yCoordinate = motionEvent.getY();
+
+                    //gets the starting touching point
+                    onTouchX = xCoordinate;
+                    onTouchY = yCoordinate;
+                    for (int i = 0; i < mNodeGraph.getNodes().size(); i++)
+                    {
+                        if ((xCoordinate < mNodeGraph.getNodes().get(i).getPointX() + 10
+                                && xCoordinate > mNodeGraph.getNodes().get(i).getPointX() - 10)
+                                && (yCoordinate < mNodeGraph.getNodes().get(i).getPointY() + 10 &&
+                                yCoordinate > mNodeGraph.getNodes().get(i).getPointY() - 10))
+                        {
+                            Log.d("status", "In circle");
+                        }
+                    }
+                    break;
+                }
+
+                case MotionEvent.ACTION_MOVE:
+                {
+                    final float xCoordinate = motionEvent.getX();
+                    final float yCoordinate = motionEvent.getY();
+                    for (int i = 0; i < mNodeGraph.getNodes().size(); i++)
+                    {
+                        if ((xCoordinate < mNodeGraph.getNodes().get(i).getPointX() + 10
+                                && xCoordinate > mNodeGraph.getNodes().get(i).getPointX() - 10)
+                                && (yCoordinate < mNodeGraph.getNodes().get(i).getPointY() + 10 &&
+                                yCoordinate > mNodeGraph.getNodes().get(i).getPointY() - 10))
+                        {
+                            float finalPosX = motionEvent.getX();
+                            float finalPosY = motionEvent.getY();
+
+                            mNodeGraph.getNodes().get(i).setPointX(finalPosX);
+                            mNodeGraph.getNodes().get(i).setPointY(finalPosY);
+                        }
+                        mNodeGraph.invalidate();
+                        handled = true;
+                    }
+                    break;
+                }
 
                 case MotionEvent.ACTION_UP:
+                {
+                    mNodeGraph.invalidate();
+                    break;
+                }
+
 
             }
-            for (int i = 0; i < mNodeGraph.getNodes().size(); i++)
-            {
-                if ((xCoordinate < mNodeGraph.getNodes().get(i).getPointX() + 10
-                        && xCoordinate > mNodeGraph.getNodes().get(i).getPointX() - 10)
-                        &&(yCoordinate < mNodeGraph.getNodes().get(i).getPointY() + 10 &&
-                        yCoordinate > mNodeGraph.getNodes().get(i).getPointY() - 10))
-                {
-                //Toast.makeText(getApplicationContext(), mNodeGraph.getNodes().get(i).getName(), Toast.LENGTH_SHORT).show();
-                }
-            }
+
             return true;
         }
     }

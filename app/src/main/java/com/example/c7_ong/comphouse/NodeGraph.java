@@ -71,7 +71,7 @@ public class NodeGraph extends View{
         mLinePos = 0;
         tempOfficerList = new ArrayList<>();
         coordinateList = new ArrayList<>();
-        scaleDetector = new ScaleGestureDetector(getContext(), new ScaleListener());
+        //scaleDetector = new ScaleGestureDetector(getContext(), new ScaleListener());
         //Log.d("width", mWidth);
     }
 
@@ -106,7 +106,6 @@ public class NodeGraph extends View{
     protected void onDraw(Canvas canvas)
     {
         super.onDraw(canvas);
-        canvas.drawCircle(mWidth/2, mHeight/2, 50, mNodePaint);
         final float dotRadius = mRadius + 30;
         //Log.d("arraySize", "Size" + tempOfficerList.size());
         for (int i = 0; i < tempOfficerList.size(); i++)
@@ -119,10 +118,11 @@ public class NodeGraph extends View{
             node.setPointY(y);
             node.setName(tempOfficerList.get(i).getOfficerName().toString());
             coordinateList.add(node);
-            canvas.drawCircle(x,y,30, mOfficerNodePaint);
             canvas.drawLine(mWidth/2,mHeight/2,x,y,mTextPaint);
+            canvas.drawCircle(x,y,30, mOfficerNodePaint);
             canvas.drawText(tempOfficerList.get(i).getOfficerName().toString(),x,y,mTextPaint);
         }
+        canvas.drawCircle(mWidth/2, mHeight/2, 50, mNodePaint);
         invalidate();
 
     }
@@ -133,16 +133,5 @@ public class NodeGraph extends View{
 
     public void setTempOfficerList(ArrayList<Officer> tempOfficerList) {
         this.tempOfficerList = tempOfficerList;
-    }
-
-    private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener
-    {
-        @Override
-        public boolean onScale(ScaleGestureDetector detector) {
-            scaleFactor *= detector.getScaleFactor();
-            scaleFactor = Math.max(0.1f, Math.min(scaleFactor, 10.0f));
-            invalidate();
-            return true;
-        }
     }
 }
