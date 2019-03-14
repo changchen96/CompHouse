@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -40,8 +41,9 @@ public class drawGraph extends AppCompatActivity {
         setContentView(R.layout.activity_draw_graph);
         compNumber = getIntent().getStringExtra("compNo");
         mOfficerList = new ArrayList<>();
-        mNodeGraph = findViewById(R.id.graphView);
         fetchOfficers(compNumber);
+        mNodeGraph = findViewById(R.id.graphView);
+        mNodeGraph.setOnTouchListener(new TouchListener());
     }
 
     private void fetchOfficers(String companyNo)
@@ -64,7 +66,7 @@ public class drawGraph extends AppCompatActivity {
                         mOfficerList.add(officer);
                         //Log.d("officerName", mOfficerList.toString());
                     }
-                    Log.d("officerListSize", mOfficerList.size()+"");
+                    //Log.d("officerListSize", mOfficerList.size()+"");
                     mNodeGraph.setTempOfficerList(mOfficerList);
                 }
 
@@ -91,4 +93,15 @@ public class drawGraph extends AppCompatActivity {
         officerQueue.add(jsonObjectRequest);
     }
 
+    private final class TouchListener implements View.OnTouchListener
+    {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            final int xCoordinate = (int) motionEvent.getRawX();
+            final int yCoordinate = (int) motionEvent.getRawY();
+            Log.d("X coordinate: ", xCoordinate+"");
+            Log.d("Y coordinate: ", yCoordinate+"");
+            return true;
+        }
+    }
 }

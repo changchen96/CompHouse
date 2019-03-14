@@ -9,6 +9,7 @@ import android.graphics.Path;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -73,11 +74,11 @@ public class NodeGraph extends View{
         Double startAngle = Math.PI*(9/8d);
         if (size > 30)
         {
-            Double angle = startAngle + (pos * (Math.PI/(size-10)));
+            Double angle = startAngle + (pos * (Math.PI/(size-15)));
             result[0] = (float) (radius * Math.cos(angle)) + (mWidth/2);
             result[1] = (float) (radius * Math.sin(angle)) + (mHeight/2);
         }
-        if (size > 20 && size < 30)
+        else if (size > 20 && size < 30)
         {
             Double angle = startAngle + (pos * (Math.PI/(size-5)));
             result[0] = (float) (radius * Math.cos(angle)) + (mWidth/2);
@@ -98,7 +99,7 @@ public class NodeGraph extends View{
         super.onDraw(canvas);
         canvas.drawCircle(mWidth/2, mHeight/2, 50, mNodePaint);
         final float dotRadius = mRadius + 30;
-        Log.d("arraySize", "Size" + tempOfficerList.size());
+        //Log.d("arraySize", "Size" + tempOfficerList.size());
         for (int i = 0; i < tempOfficerList.size(); i++)
         {
             float[] xyData = computeLinePosition(i, dotRadius);
