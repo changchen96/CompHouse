@@ -10,12 +10,16 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
+
+import org.w3c.dom.Node;
 
 import java.util.ArrayList;
 
 public class NodeGraph extends View{
     private ArrayList<Officer> tempOfficerList;
+    private ArrayList<NodeClass> coordinateList;
     private Context graphContext;
     private float mWidth;
     private float mHeight;
@@ -27,6 +31,9 @@ public class NodeGraph extends View{
     private int mLinePos;
     private final float[] mTempResult = new float[2];
     private final StringBuffer mTemp = new StringBuffer();
+    private float scaleFactor = 1.f;
+    private ScaleGestureDetector scaleDetector;
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
        mWidth = w;
@@ -63,6 +70,8 @@ public class NodeGraph extends View{
         mNodePaint.setColor(Color.BLUE);
         mLinePos = 0;
         tempOfficerList = new ArrayList<>();
+        coordinateList = new ArrayList<>();
+        scaleDetector = new ScaleGestureDetector(getContext(), new ScaleListener());
         //Log.d("width", mWidth);
     }
 
@@ -70,7 +79,7 @@ public class NodeGraph extends View{
     {
         float[] result = mTempResult;
         int size = tempOfficerList.size();
-        Log.d("arrSize", size+"");
+        //Log.d("arrSize", size+"");
         Double startAngle = Math.PI*(9/8d);
         if (size > 30)
         {
@@ -105,8 +114,12 @@ public class NodeGraph extends View{
             float[] xyData = computeLinePosition(i, dotRadius);
             float x = xyData[0];
             float y = xyData[1];
-
-            canvas.drawCircle(x,y,20, mOfficerNodePaint);
+            NodeClass node = new NodeClass();
+            node.setPointX(x);
+            node.setPointY(y);
+            node.setName(tempOfficerList.get(i).getOfficerName().toString());
+            coordinateList.add(node);
+            canvas.drawCircle(x,y,30, mOfficerNodePaint);
             canvas.drawLine(mWidth/2,mHeight/2,x,y,mTextPaint);
             canvas.drawText(tempOfficerList.get(i).getOfficerName().toString(),x,y,mTextPaint);
         }
@@ -114,11 +127,22 @@ public class NodeGraph extends View{
 
     }
 
-    public ArrayList<Officer> getTempOfficerList() {
-        return tempOfficerList;
+    public ArrayList<NodeClass> getNodes() {
+        return coordinateList;
     }
 
     public void setTempOfficerList(ArrayList<Officer> tempOfficerList) {
         this.tempOfficerList = tempOfficerList;
+    }
+
+    private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener
+    {
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            scaleFactor *= detector.getScaleFactor();
+            scaleFactor = Math.max(0.1f, Math.min(scaleFactor, 10.0f));
+            invalidate();
+            return true;
+        }
     }
 }

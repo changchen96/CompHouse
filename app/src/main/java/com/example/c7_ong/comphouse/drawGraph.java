@@ -1,16 +1,20 @@
 package com.example.c7_ong.comphouse;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -33,8 +37,8 @@ public class drawGraph extends AppCompatActivity {
     private ArrayList<Officer> mOfficerList;
     private String compNumber;
     private NodeGraph mNodeGraph;
-
-
+    private float scaleFactor = 1.f;
+    private ScaleGestureDetector scaleDetector;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,9 +68,7 @@ public class drawGraph extends AppCompatActivity {
                         String retrievedOfficerName = data.getString("name");
                         officer.setOfficerName(retrievedOfficerName);
                         mOfficerList.add(officer);
-                        //Log.d("officerName", mOfficerList.toString());
                     }
-                    //Log.d("officerListSize", mOfficerList.size()+"");
                     mNodeGraph.setTempOfficerList(mOfficerList);
                 }
 
@@ -93,15 +95,36 @@ public class drawGraph extends AppCompatActivity {
         officerQueue.add(jsonObjectRequest);
     }
 
-    private final class TouchListener implements View.OnTouchListener
+    public class TouchListener implements View.OnTouchListener
     {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            final int xCoordinate = (int) motionEvent.getRawX();
-            final int yCoordinate = (int) motionEvent.getRawY();
-            Log.d("X coordinate: ", xCoordinate+"");
-            Log.d("Y coordinate: ", yCoordinate+"");
+            boolean handled;
+            final float xCoordinate = motionEvent.getX();
+            final float yCoordinate = motionEvent.getY();
+            switch(motionEvent.getActionMasked())
+            {
+                case MotionEvent.ACTION_DOWN:
+
+                case MotionEvent.ACTION_UP:
+
+            }
+            for (int i = 0; i < mNodeGraph.getNodes().size(); i++)
+            {
+                if ((xCoordinate < mNodeGraph.getNodes().get(i).getPointX() + 10
+                        && xCoordinate > mNodeGraph.getNodes().get(i).getPointX() - 10)
+                        &&(yCoordinate < mNodeGraph.getNodes().get(i).getPointY() + 10 &&
+                        yCoordinate > mNodeGraph.getNodes().get(i).getPointY() - 10))
+                {
+                //Toast.makeText(getApplicationContext(), mNodeGraph.getNodes().get(i).getName(), Toast.LENGTH_SHORT).show();
+                }
+            }
             return true;
         }
     }
+
+
+
+
+
 }

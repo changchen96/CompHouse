@@ -5,31 +5,41 @@ import android.widget.BaseAdapter;
 
 public class NodeClass{
     private float radius = 50;
-    private Point nodePoint;
-    int x;
-    int y;
-
+    float x;
+    float y;
+    String name;
     public float getRadius()
     {
         return radius;
     }
 
-    public Point setPoint(int PointX, int PointY)
+    public void setPointX(float PointX)
     {
         this.x = PointX;
-        this.y = PointY;
-        return nodePoint;
     }
 
-    public int getPointX()
+    public void setPointY(float PointY)
+    {
+        this.y = PointY;
+    }
+
+    public void setName(String officerName)
+    {
+        this.name = officerName;
+    }
+    public float getPointX()
     {
         return x;
     }
 
-    public int getPointY()
+    public float getPointY()
     {
         return y;
     }
 
+    public String getName()
+    {
+        return name;
+    }
 
 }

@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".drawGraph" />
-        <activity android:name=".CompView"/>
+        <activity android:name=".CompView" />
     </application>
 
 </manifest>
