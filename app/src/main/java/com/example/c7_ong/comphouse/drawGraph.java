@@ -1,20 +1,21 @@
 package com.example.c7_ong.comphouse;
 
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
+import android.net.Uri;
+import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
+import android.view.Menu;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.Button;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -28,18 +29,24 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 
 public class drawGraph extends AppCompatActivity {
     private ArrayList<Officer> mOfficerList;
     private String compNumber;
     private NodeGraph mNodeGraph;
-    private float scaleFactor = 1.f;
-    private ScaleGestureDetector scaleDetector;
-
+    private Button share;
+    private File imagePath;
+    private static final int PERMISSION_REQUEST_CODE = 200;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +55,70 @@ public class drawGraph extends AppCompatActivity {
         mOfficerList = new ArrayList<>();
         fetchOfficers(compNumber);
         mNodeGraph = findViewById(R.id.graphView);
+        share = (Button) findViewById(R.id.share);
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!checkPermission())
+                {
+                    Bitmap screenshot = getImage();
+                    saveImage(screenshot);
+                }
+                else
+                {
+                    if (checkPermission())
+                    {
+                        requestPermissionAndContinue();
+                    }
+                    else
+                    {
+                        Bitmap screenshot = getImage();
+                        saveImage(screenshot);
+                    }
+                }
+            }
+        });
+    }
+
+    private boolean checkPermission() {
+
+        return ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                ;
+    }
+
+    private void requestPermissionAndContinue() {
+        if (ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, WRITE_EXTERNAL_STORAGE)
+                    && ActivityCompat.shouldShowRequestPermissionRationale(this, READ_EXTERNAL_STORAGE)) {
+                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+                alertBuilder.setCancelable(true);
+                alertBuilder.setTitle("Permission needed");
+                alertBuilder.setMessage("Do you want to let the app store data in your device?");
+                alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        ActivityCompat.requestPermissions(drawGraph.this, new String[]{WRITE_EXTERNAL_STORAGE
+                                , READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+                    }
+                });
+                AlertDialog alert = alertBuilder.create();
+                alert.show();
+                Log.e("", "permission denied, show dialog");
+            } else {
+                ActivityCompat.requestPermissions(drawGraph.this, new String[]{WRITE_EXTERNAL_STORAGE,
+                        READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+            }
+        } else {
+            Bitmap screenshot = getImage();
+            saveImage(screenshot);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
     }
 
     private void fetchOfficers(String companyNo)
@@ -95,6 +166,36 @@ public class drawGraph extends AppCompatActivity {
         officerQueue.add(jsonObjectRequest);
     }
 
+public Bitmap getImage()
+{
+    View screenshot = findViewById(R.id.graphView);
+    screenshot.setBackgroundColor(Color.WHITE);
+    screenshot.setDrawingCacheEnabled(true);
+    return screenshot.getDrawingCache();
+}
+
+private void saveImage (Bitmap image)
+{
+    Uri uri = null;
+    try
+    {
+        imagePath = new File(Environment.getExternalStorageDirectory()+ "/nodeGraph.jpeg");
+        FileOutputStream stream = new FileOutputStream(imagePath);
+        image.compress(Bitmap.CompressFormat.JPEG, 90, stream);
+        stream.flush();
+        stream.close();
+        uri = Uri.fromFile(imagePath);
+    }
+    catch (IOException e)
+    {
+        Log.d("Error", "IOException occured!");
+    }
+    Intent shareIntent = new Intent();
+    shareIntent.setAction(Intent.ACTION_SEND);
+    shareIntent.setType("image/jpeg");
+    shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(imagePath.toString()));
+    startActivity(Intent.createChooser(shareIntent, "Share image"));
+}
 
 
 

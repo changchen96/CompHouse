@@ -2,6 +2,7 @@ package com.example.c7_ong.comphouse;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -34,8 +35,12 @@ public class NodeGraph extends View{
     private ScaleGestureDetector scaleDetector;
     private float finalX;
     private float finalY;
+    private float dragX;
+    private float dragY;
     private float scaleStartX;
     private float scaleStartY;
+    private float afterDragX;
+    private float afterDragY;
     private Canvas myCanvas;
 
 
@@ -82,17 +87,17 @@ public class NodeGraph extends View{
         //Log.d("arrSize", size+"");
         Double startAngle = Math.PI * (9 / 8d);
         if (size > 30) {
-            Double angle = startAngle + (pos * (Math.PI / (size - 15)));
-            result[0] = (float) (radius * Math.cos(angle)) + (mWidth / 2);
-            result[1] = (float) (radius * Math.sin(angle)) + (mHeight / 2);
+            Double angle = startAngle + (pos * (Math.PI / (size-15)));
+            result[0] = (float) (radius * Math.cos(angle)) + (finalX);
+            result[1] = (float) (radius * Math.sin(angle)) + (finalY);
         } else if (size > 20 && size < 30) {
             Double angle = startAngle + (pos * (Math.PI / (size - 5)));
-            result[0] = (float) (radius * Math.cos(angle)) + (mWidth / 2);
-            result[1] = (float) (radius * Math.sin(angle)) + (mHeight / 2);
+            result[0] = (float) (radius * Math.cos(angle)) + (finalX);
+            result[1] = (float) (radius * Math.sin(angle)) + (finalY);
         } else {
             Double angle = startAngle + (pos * (Math.PI / (size)));
-            result[0] = (float) (radius * Math.cos(angle)) + (mWidth / 2);
-            result[1] = (float) (radius * Math.sin(angle)) + (mHeight / 2);
+            result[0] = (float) (radius * Math.cos(angle)) + (finalX);
+            result[1] = (float) (radius * Math.sin(angle)) + (finalY);
         }
         return result;
     }
@@ -102,25 +107,56 @@ public class NodeGraph extends View{
         myCanvas = canvas;
         super.onDraw(myCanvas);
         myCanvas.save();
+        myCanvas.translate(afterDragX,afterDragY);
         myCanvas.scale(scaleFactor, scaleFactor, scaleStartX, scaleStartY);
         final float dotRadius = mRadius + 30;
-        //Log.d("arraySize", "Size" + tempOfficerList.size());
-        for (int i = 0; i < tempOfficerList.size(); i++) {
-            float[] xyData = computeLinePosition(i, dotRadius);
-            float x = xyData[0];
-            float y = xyData[1];
-            NodeClass node = new NodeClass();
-            node.setPointX(x);
-            node.setPointY(y);
-            node.setName(tempOfficerList.get(i).getOfficerName().toString());
-            coordinateList.add(node);
-            myCanvas.drawLine(mWidth / 2, mHeight / 2, x, y, mTextPaint);
-            myCanvas.drawCircle(x, y, 30, mOfficerNodePaint);
-            myCanvas.drawText(tempOfficerList.get(i).getOfficerName().toString(), x - 40, y, mTextPaint);
+        if(finalX == 0 && finalY == 0)
+        {
+            finalX = mWidth/2;
+            finalY = mHeight/2;
+            for (int i = 0; i < tempOfficerList.size(); i++) {
+                float[] xyData = computeLinePosition(i, dotRadius);
+                float x = xyData[0];
+                float y = xyData[1];
+                NodeClass node = new NodeClass();
+                node.setPointX(x);
+                node.setPointY(y);
+                node.setName(tempOfficerList.get(i).getOfficerName().toString());
+                coordinateList.add(node);
+                myCanvas.drawLine(finalX, finalY, x, y, mTextPaint);
+                myCanvas.drawCircle(x, y, 30, mOfficerNodePaint);
+                myCanvas.drawText(tempOfficerList.get(i).getOfficerName().toString(), x - 40, y, mTextPaint);
+            }
+            myCanvas.drawCircle(finalX, finalY, 50, mNodePaint);
+            myCanvas.restore();
+            invalidate();
         }
-        myCanvas.drawCircle(mWidth / 2, mHeight / 2, 50, mNodePaint);
-        myCanvas.restore();
-        invalidate();
+        else
+        {
+            for (int i = 0; i < tempOfficerList.size(); i++) {
+                float[] xyData = computeLinePosition(i, dotRadius);
+                float x = xyData[0];
+                float y = xyData[1];
+                NodeClass node = new NodeClass();
+                node.setPointX(x);
+                node.setPointY(y);
+                node.setName(tempOfficerList.get(i).getOfficerName().toString());
+                coordinateList.add(node);
+                myCanvas.drawLine(finalX, finalY, x, y, mTextPaint);
+                myCanvas.drawCircle(x, y, 30, mOfficerNodePaint);
+                if (i > 24 && i < tempOfficerList.size())
+                {
+                    myCanvas.drawText(tempOfficerList.get(i).getOfficerName().toString(), x - 40, y+20, mTextPaint);
+                }
+                else
+                {
+                    myCanvas.drawText(tempOfficerList.get(i).getOfficerName().toString(), x - 40, y, mTextPaint);
+                }
+            }
+            myCanvas.drawCircle(finalX, finalY, 50, mNodePaint);
+            myCanvas.restore();
+            invalidate();
+        }
 
     }
 
@@ -136,29 +172,43 @@ public class NodeGraph extends View{
     public boolean onTouchEvent(MotionEvent motionEvent) {
         scaleDetector.onTouchEvent(motionEvent);
         final int action = motionEvent.getAction();
-        /*switch(action)
+        switch(action)
         {
             case MotionEvent.ACTION_DOWN:
             {
                 final float x = motionEvent.getX();
                 final float y = motionEvent.getY();
-                finalX = x;
-                finalY = y;
+                dragX = x;
+                dragY = y;
                 break;
             }
             case MotionEvent.ACTION_MOVE:
             {
                 final float x = motionEvent.getX();
                 final float y = motionEvent.getY();
-                final float dx = x - finalX;
-                final float dy = y - finalY;
-
+                final float dx = x - dragX;
+                final float dy = y - dragY;
+                afterDragX =+ dx;
+                afterDragY =+ dy;
                 invalidate();
-                finalX = x;
-                finalY = y;
                 break;
             }
-        }*/
+            case MotionEvent.ACTION_UP:
+            {
+                //invalidate();
+                break;
+            }
+            case MotionEvent.ACTION_CANCEL:
+            {
+                break;
+                //invalidate();
+            }
+            case MotionEvent.ACTION_POINTER_UP:
+            {
+                break;
+                //invalidate();
+            }
+        }
         return true;
     }
 
@@ -173,6 +223,8 @@ public class NodeGraph extends View{
             return true;
         }
     }
+
+
 
 
 }
