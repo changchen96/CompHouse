@@ -41,6 +41,8 @@ public class NodeGraph extends View{
     private float scaleStartY;
     private float afterDragX;
     private float afterDragY;
+    private float dx;
+    private float dy;
     private Canvas myCanvas;
 
 
@@ -107,7 +109,7 @@ public class NodeGraph extends View{
         myCanvas = canvas;
         super.onDraw(myCanvas);
         myCanvas.save();
-        myCanvas.translate(afterDragX,afterDragY);
+        myCanvas.translate(dx,dy);
         myCanvas.scale(scaleFactor, scaleFactor, scaleStartX, scaleStartY);
         final float dotRadius = mRadius + 30;
         if(finalX == 0 && finalY == 0)
@@ -160,10 +162,6 @@ public class NodeGraph extends View{
 
     }
 
-    public ArrayList<NodeClass> getNodes() {
-        return coordinateList;
-    }
-
     public void setTempOfficerList(ArrayList<Officer> tempOfficerList) {
         this.tempOfficerList = tempOfficerList;
     }
@@ -186,11 +184,11 @@ public class NodeGraph extends View{
             {
                 final float x = motionEvent.getX();
                 final float y = motionEvent.getY();
-                final float dx = x - dragX;
-                final float dy = y - dragY;
-                afterDragX =+ dx;
-                afterDragY =+ dy;
-                invalidate();
+                dx = x - dragX;
+                dy = y - dragY;
+                afterDragX = dx;
+                afterDragY = dy;
+                //invalidate();
                 break;
             }
             case MotionEvent.ACTION_UP:
