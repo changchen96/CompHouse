@@ -30,7 +30,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+//sample RecyclerView implementation
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CompNameHolder> {
     private ArrayList<Company> mCompList;
     private LayoutInflater inflater;
@@ -77,14 +77,14 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.CompNameHolder
 
         @Override
         public void onClick(View view) {
-            int mPosition = getLayoutPosition();
-            Company onClickComp = mCompList.get(mPosition);
-            String compTitle = onClickComp.getCompanyTitle().toString();
-            String compNo = onClickComp.getCompanyNumber().toString();
-            Toast.makeText(compContext, compTitle + " Clicked!", Toast.LENGTH_SHORT).show();
-            Intent graph = new Intent(compContext, drawGraph.class);
-            graph.putExtra("compNo", compNo);
-            compContext.startActivity(graph);
+            int mPosition = getLayoutPosition(); //gets the position of the layout
+            Company onClickComp = mCompList.get(mPosition); //gets the index of the CompList Arraylist
+            String compTitle = onClickComp.getCompanyTitle().toString(); //puts the title to a string variable
+            String compNo = onClickComp.getCompanyNumber().toString(); //puts the company number to a string variable
+            Toast.makeText(compContext, compTitle + " Clicked!", Toast.LENGTH_SHORT).show(); //display a mini-message showing which company has been clicked
+            Intent graph = new Intent(compContext, drawGraph.class);//sets an intent to the drawGraph class
+            graph.putExtra("compNo", compNo); //pass the company number to be taken as an argument
+            compContext.startActivity(graph); //start the activity
         }
     }
 

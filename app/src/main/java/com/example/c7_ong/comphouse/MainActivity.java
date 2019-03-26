@@ -24,9 +24,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void searchQuery(View view) {
-        String queryString = query.getText().toString();
+        String queryString = query.getText().toString(); //gets the query from the textbox
         Intent intent = new Intent (this, CompView.class);
-        intent.putExtra("query", queryString);
+        intent.putExtra("query", queryString); //puts the value to the intent
         startActivityForResult(intent, 0);
     }
 }

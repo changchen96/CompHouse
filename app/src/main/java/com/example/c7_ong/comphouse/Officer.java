@@ -1,5 +1,6 @@
 package com.example.c7_ong.comphouse;
 
+//getter and setter for the officer data
 public class Officer {
     public String officerName;
     public String officerOccupation;
@@ -15,30 +16,4 @@ public class Officer {
     {
         this.officerName = setName;
     }
-
-    public String getOccupation()
-    {
-        return officerOccupation;
-    }
-
-    public void setOccupation(String occupation)
-    {
-        this.officerOccupation = occupation;
-    }
-
-    public String getAddress()
-    {
-        return officerAddress;
-    }
-
-    public void setAddress(String address)
-    {
-        this.officerAddress = address;
-    }
-
-    public String getOfficerRole()
-    {
-        return officerRole;
-    }
-
 }

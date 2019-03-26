@@ -3,6 +3,7 @@ package com.example.c7_ong.comphouse;
 import java.util.ArrayList;
 import java.util.List;
 
+//Getter and setter class for the company information
 public class Company {
     public String companyTitle;
     public String companyNumber;

@@ -50,7 +50,7 @@ public class CompView extends AppCompatActivity{
     {
 
     }
-        private void fetchCompany(String query)
+        private void fetchCompany(String query) //function to get company data
         {
             RequestQueue queue = Volley.newRequestQueue(CompView.this);
             String mQuery = query;
@@ -64,15 +64,15 @@ public class CompView extends AppCompatActivity{
                         {
                             JSONObject data = array.getJSONObject(i);
                             Company company = new Company();
-                            String retrievedTitle = data.getString("title");
-                            String retrievedNumber = data.getString("company_number");
-                            company.setCompanyTitle(retrievedTitle);
-                            company.setCompanyNumber(retrievedNumber);
-                            newCompList.add(company);
+                            String retrievedTitle = data.getString("title"); //get the company title as a string
+                            String retrievedNumber = data.getString("company_number"); //get the company number as a string
+                            company.setCompanyTitle(retrievedTitle); //set the company title in the Company class
+                            company.setCompanyNumber(retrievedNumber); //set the company number in the Company class
+                            newCompList.add(company); //add the company object into the array
                             //Log.d("compList", newCompList.size()+"");
                         }
                         dataAdapter = new DataAdapter(getApplicationContext(), newCompList);
-                        mView.setAdapter(dataAdapter);
+                        mView.setAdapter(dataAdapter); //sets the data adapter for the recyclerview
                     }
                     catch (JSONException e)
                     {

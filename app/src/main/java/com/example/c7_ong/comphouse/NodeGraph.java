@@ -23,7 +23,6 @@ import java.util.ArrayList;
 
 public class NodeGraph extends View{
     private ArrayList<Officer> tempOfficerList;
-    private ArrayList<NodeClass> coordinateList;
     private float mWidth;
     private float mHeight;
     private Paint mTextPaint;
@@ -68,6 +67,7 @@ public class NodeGraph extends View{
         init(context);
     }
 
+    //initialize the instance variabls
     private void init(Context ctx) {
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setColor(Color.BLACK);
@@ -77,16 +77,13 @@ public class NodeGraph extends View{
         mNodePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mNodePaint.setColor(Color.BLUE);
         tempOfficerList = new ArrayList<>();
-        coordinateList = new ArrayList<>();
-        //scaleDetector = new ScaleGestureDetector(this, new ScaleListener());
         scaleDetector = new ScaleGestureDetector(getContext(), new ScaleListener());
-        //Log.d("width", mWidth);
     }
 
+    //function to calculate the angle between lines to the officer nodes
     private float[] computeLinePosition(final int pos, final float radius) {
         float[] result = mTempResult;
-        int size = tempOfficerList.size();
-        //Log.d("arrSize", size+"");
+        int size = tempOfficerList.size(); //gets the size of the array
         Double startAngle = Math.PI * (9 / 8d);
         if (size > 30) {
             Double angle = startAngle + (pos * (Math.PI / (size-15)));
@@ -104,6 +101,8 @@ public class NodeGraph extends View{
         return result;
     }
 
+
+    //onDraw draws the entire graph when called
     @Override
     protected void onDraw(Canvas canvas) {
         myCanvas = canvas;
@@ -116,37 +115,29 @@ public class NodeGraph extends View{
         {
             finalX = mWidth/2;
             finalY = mHeight/2;
+            //Draw the nodes and the lines according to the array size for the officers retrieved from the API
             for (int i = 0; i < tempOfficerList.size(); i++) {
                 float[] xyData = computeLinePosition(i, dotRadius);
                 float x = xyData[0];
                 float y = xyData[1];
-                NodeClass node = new NodeClass();
-                node.setPointX(x);
-                node.setPointY(y);
-                node.setName(tempOfficerList.get(i).getOfficerName().toString());
-                coordinateList.add(node);
-                myCanvas.drawLine(finalX, finalY, x, y, mTextPaint);
-                myCanvas.drawCircle(x, y, 30, mOfficerNodePaint);
-                myCanvas.drawText(tempOfficerList.get(i).getOfficerName().toString(), x - 40, y, mTextPaint);
+                myCanvas.drawLine(finalX, finalY, x, y, mTextPaint); // draw line from centre to the officer node
+                myCanvas.drawCircle(x, y, 30, mOfficerNodePaint); //officer node is drawn here
+                myCanvas.drawText(tempOfficerList.get(i).getOfficerName().toString(), x - 40, y, mTextPaint);//used to arrange the officer names in the bottom parts of the graph so it doesn't overlap
             }
-            myCanvas.drawCircle(finalX, finalY, 50, mNodePaint);
+            myCanvas.drawCircle(finalX, finalY, 50, mNodePaint); //draw the centre node which represents the company in blue
             myCanvas.restore();
             invalidate();
         }
         else
         {
+            //Draw the nodes and the lines according to the array size for the officers retrieved from the API
             for (int i = 0; i < tempOfficerList.size(); i++) {
                 float[] xyData = computeLinePosition(i, dotRadius);
                 float x = xyData[0];
                 float y = xyData[1];
-                NodeClass node = new NodeClass();
-                node.setPointX(x);
-                node.setPointY(y);
-                node.setName(tempOfficerList.get(i).getOfficerName().toString());
-                coordinateList.add(node);
-                myCanvas.drawLine(finalX, finalY, x, y, mTextPaint);
-                myCanvas.drawCircle(x, y, 30, mOfficerNodePaint);
-                if (i > 24 && i < tempOfficerList.size())
+                myCanvas.drawLine(finalX, finalY, x, y, mTextPaint);// draw line from centre to the officer node
+                myCanvas.drawCircle(x, y, 30, mOfficerNodePaint);//officer node is drawn here
+                if (i > 24 && i < tempOfficerList.size()) //used to arrange the officer names in the bottom parts of the graph so it doesn't overlap
                 {
                     myCanvas.drawText(tempOfficerList.get(i).getOfficerName().toString(), x - 40, y+20, mTextPaint);
                 }
@@ -155,17 +146,18 @@ public class NodeGraph extends View{
                     myCanvas.drawText(tempOfficerList.get(i).getOfficerName().toString(), x - 40, y, mTextPaint);
                 }
             }
-            myCanvas.drawCircle(finalX, finalY, 50, mNodePaint);
+            myCanvas.drawCircle(finalX, finalY, 50, mNodePaint);//draw the centre node which represents the company in blue
             myCanvas.restore();
             invalidate();
         }
 
     }
-
+    //gets the value of the arrayList from another class and puts them into a local arrayList variable
     public void setTempOfficerList(ArrayList<Officer> tempOfficerList) {
         this.tempOfficerList = tempOfficerList;
     }
 
+    //Function for ontouch events on the canvas
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
         scaleDetector.onTouchEvent(motionEvent);
@@ -174,20 +166,20 @@ public class NodeGraph extends View{
         {
             case MotionEvent.ACTION_DOWN:
             {
-                final float x = motionEvent.getX();
-                final float y = motionEvent.getY();
-                dragX = x;
-                dragY = y;
+                final float x = motionEvent.getX(); //get the touched x coordinate
+                final float y = motionEvent.getY(); //get the touched y coordinate
+                dragX = x; //sets x coordinate for dragging
+                dragY = y; //sets y coordinate for dragging
                 break;
             }
             case MotionEvent.ACTION_MOVE:
             {
-                final float x = motionEvent.getX();
-                final float y = motionEvent.getY();
-                dx = x - dragX;
-                dy = y - dragY;
-                afterDragX = dx;
-                afterDragY = dy;
+                final float x = motionEvent.getX(); //get the touched x coordinate
+                final float y = motionEvent.getY(); //get the touched y coordinate
+                dx = x - dragX; //get the difference in x coordinates after dragging
+                dy = y - dragY; //get the difference in y coordinates after dragging
+                afterDragX = dx; //set the final dragged x coordinates
+                afterDragY = dy; //set the final dragged x coordinates
                 //invalidate();
                 break;
             }
@@ -210,6 +202,7 @@ public class NodeGraph extends View{
         return true;
     }
 
+    //code for scaling for the canvas
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         @Override
         public boolean onScale(ScaleGestureDetector detector) {

@@ -54,8 +54,9 @@ public class drawGraph extends AppCompatActivity {
         compNumber = getIntent().getStringExtra("compNo");
         mOfficerList = new ArrayList<>();
         fetchOfficers(compNumber);
-        mNodeGraph = findViewById(R.id.graphView);
+        mNodeGraph = findViewById(R.id.graphView); //calls onDraw and draws the nodegraph
         share = (Button) findViewById(R.id.share);
+        //checks sharing permissions
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,14 +80,14 @@ public class drawGraph extends AppCompatActivity {
             }
         });
     }
-
+    //function for checking sharing permission
     private boolean checkPermission() {
 
         return ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                 ;
     }
-
+    //function to request permission and share
     private void requestPermissionAndContinue() {
         if (ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -116,11 +117,7 @@ public class drawGraph extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
-    }
-
+    //function to get officer info from the API
     private void fetchOfficers(String companyNo)
     {
         RequestQueue officerQueue = Volley.newRequestQueue(this);
@@ -136,7 +133,7 @@ public class drawGraph extends AppCompatActivity {
                     {
                         JSONObject data = officerArray.getJSONObject(i);
                         Officer officer = new Officer();
-                        String retrievedOfficerName = data.getString("name");
+                        String retrievedOfficerName = data.getString("name"); //gets the officer name and puts it to a string
                         officer.setOfficerName(retrievedOfficerName);
                         mOfficerList.add(officer);
                     }
@@ -166,6 +163,7 @@ public class drawGraph extends AppCompatActivity {
         officerQueue.add(jsonObjectRequest);
     }
 
+    //function to save a screenshot of the canvas
 public Bitmap getImage()
 {
     View screenshot = findViewById(R.id.graphView);
@@ -174,6 +172,7 @@ public Bitmap getImage()
     return screenshot.getDrawingCache();
 }
 
+//function to share the image
 private void saveImage (Bitmap image)
 {
     Uri uri = null;
